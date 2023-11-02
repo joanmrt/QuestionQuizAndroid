@@ -13,8 +13,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mTrueButton;
     private Button mFalseButton;
-    private ImageButton mNextButton;
-    private ImageButton mPreviousButton;
+    private Button mNextButton;
+    private Button mPreviousButton;
     private TextView mQuestionTextView;
     private Question[] mQuestionBank = new Question[]{
             new Question(R.string.question_australia, true),
@@ -48,22 +48,38 @@ public class MainActivity extends AppCompatActivity {
                 checkAnswer(false);
             }
         });
-        mNextButton = (ImageButton) findViewById(R.id.next_button);
+        mNextButton = (Button) findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                if (mCurrentIndex == mQuestionBank.length-1){
+                    mNextButton.setEnabled(false);
+                }
+                if (mCurrentIndex != 0 && !mPreviousButton.isActivated()) {
+                    mPreviousButton.setEnabled(true);
+                }
                 updateQuestion();
             }
         });
 
-        mPreviousButton = (ImageButton) findViewById(R.id.previous_button);
+        mPreviousButton = (Button) findViewById(R.id.previous_button);
+
+        mPreviousButton.setEnabled(false);
         mPreviousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCurrentIndex > 0) {
-                    mCurrentIndex = (mCurrentIndex - 1) % mQuestionBank.length;
+                mCurrentIndex = (mCurrentIndex - 1) % mQuestionBank.length;
+                if (mCurrentIndex == 0){
+                    mPreviousButton.setEnabled(false);
                 }
+
+                if (mCurrentIndex != mQuestionBank.length-1 && !mNextButton.isActivated()){
+                    mNextButton.setEnabled(true);
+                }
+
+
                 updateQuestion();
             }
         });
